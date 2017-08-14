@@ -5,11 +5,27 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+import rx.subjects.AsyncSubject;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Observer receiver;
+    private Observable sender;
+    private List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +40,85 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+        list = new ArrayList<>();
+        list.add("item0");
+        list.add("item1");
+        list.add("item2");
+        packageSend();
+        packageReceiver();
+        packageAsync();
+        schedulers();
+        sender.subscribe(receiver);
+    }
+
+    private void packageSend() {
+//        sender = Observable.create(new Observable.OnSubscribe<String>() {
+//            @Override
+//            public void call(Subscriber<? super String> subscriber) {
+//                subscriber.onNext("first");
+//                subscriber.onCompleted();
+//            }
+//        })
+//        .subscribeOn(Schedulers.io());
+
+//        sender = Observable.just("first", "second");
+
+        //Map：最常用且最实用的操作符之一，将对象转换成另一个对象发射出去，
+        // 应用范围非常广，如数据的转换，数据的预处理等。
+        sender = Observable.from(list)
+        .map(new Func1<String,String>() {
+            @Override
+            public String call(String o) {
+                return o.toUpperCase();
+            }
+        });
+
+    }
+
+    private void packageReceiver() {
+        receiver = new Observer() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+                Log.e("observer", o.toString());
+            }
+        };
+    }
+
+    private void schedulers() {
+        Schedulers.computation();
+    }
+
+    private void packageAsync() {
+        AsyncSubject<String> asyncSubject = AsyncSubject.create();
+        asyncSubject.onNext("second");
+        asyncSubject.onCompleted();
+        asyncSubject.subscribe(asyncSubject);
+        asyncSubject.subscribe(new Observer<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.e("observer", s.toString());
             }
         });
     }
@@ -48,5 +143,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public interface fun<T> extends fun1<Subscriber<? super T>>{
+
+    }
+
+    public interface fun1<T> extends ListAdapter{
+        void call(T t);
     }
 }
