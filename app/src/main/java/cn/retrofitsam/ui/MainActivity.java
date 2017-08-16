@@ -1,5 +1,6 @@
-package cn.retrofitsam;
+package cn.retrofitsam.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,10 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.retrofitsam.R;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Observer receiver;
     private Observable sender;
     private List<String> list;
+    private TextView tv_hello;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tv_hello = (TextView) findViewById(R.id.tv_hello);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+        tv_hello.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,RetrofitActivity.class));
             }
         });
         list = new ArrayList<>();
