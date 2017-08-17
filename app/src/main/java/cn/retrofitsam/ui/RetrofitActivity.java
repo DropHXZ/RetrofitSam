@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 
 import cn.retrofitsam.R;
+import cn.retrofitsam.bean.NewsEntry;
 import cn.retrofitsam.httpUtils.HttpContantValue;
 import cn.retrofitsam.httpUtils.HttpService;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,16 +48,16 @@ public class RetrofitActivity extends AppCompatActivity {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         HttpService service = retrofit.create(HttpService.class);
-        Call<ResponseBody> call = service.getNews("all");
+        Call<NewsEntry> call = service.getNews("top", "91bcbb395068b4c74ffdf6649c5b10f5");
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<NewsEntry>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<NewsEntry> call, Response<NewsEntry> response) {
                 response.body();
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<NewsEntry> call, Throwable t) {
                 Log.i("error", "request default");
             }
         });
