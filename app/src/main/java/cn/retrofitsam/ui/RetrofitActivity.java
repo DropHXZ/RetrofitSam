@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import cn.retrofitsam.R;
-import cn.retrofitsam.bean.NewsEntry;
+import cn.retrofitsam.bean.NewsEntity;
 import cn.retrofitsam.httpUtils.HttpContantValue;
 import cn.retrofitsam.httpUtils.HttpService;
 import retrofit2.Call;
@@ -18,6 +18,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.schedulers.Schedulers;
 
 /**
  *
@@ -48,19 +51,37 @@ public class RetrofitActivity extends AppCompatActivity {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         HttpService service = retrofit.create(HttpService.class);
-        Call<NewsEntry> call = service.getNews("top", "91bcbb395068b4c74ffdf6649c5b10f5");
+        Observable<NewsEntity> call = service.getNews("top", "91bcbb395068b4c74ffdf6649c5b10f5");
 
-        call.enqueue(new Callback<NewsEntry>() {
-            @Override
-            public void onResponse(Call<NewsEntry> call, Response<NewsEntry> response) {
-                response.body();
-            }
+        call.subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.newThread())
+                .subscribe(new Observer<NewsEntity>() {
+                    @Override
+                    public void onCompleted() {
 
-            @Override
-            public void onFailure(Call<NewsEntry> call, Throwable t) {
-                Log.i("error", "request default");
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(NewsEntity newsEntity) {
+
+                    }
+                });
+//        call.enqueue(new Callback<NewsEntity>() {
+//            @Override
+//            public void onResponse(Call<NewsEntity> call, Response<NewsEntity> response) {
+//                NewsEntity newsEntity = response.body();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NewsEntity> call, Throwable t) {
+//                Log.i("error", "request default");
+//            }
+//        });
 
 //        try {
 //            Response<ResponseBody> response = call.execute();
