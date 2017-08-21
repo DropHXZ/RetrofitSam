@@ -57,20 +57,20 @@ public class RetrofitClient {
         if (TextUtils.isEmpty(url)) {
             url = baseUrl;
         }
-//        okHttpClient = new OkHttpClient.Builder()
+        okHttpClient = new OkHttpClient.Builder()
 //                .addNetworkInterceptor(
 //                        new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS))
 //                .cookieJar(new NovateCookieManger(context))
 //                .addInterceptor(new BaseInterceptor(mContext))
 //                .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-//                .build();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .client(okHttpClient)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//                .baseUrl(url)
-//                .build();
-//        api = retrofit.create(HttpService.class);
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .baseUrl(url)
+                .build();
+        api = retrofit.create(HttpService.class);
     }
 
 }
